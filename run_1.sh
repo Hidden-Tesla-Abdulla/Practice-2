@@ -1,1 +1,1 @@
-python src/main.py B test_repo1.txt last true true test_graph
+python src/main.py python3 https://dl-cdn.alpinelinux.org/alpine/v3.18/main/x86_64/APKINDEX.tar.gz last

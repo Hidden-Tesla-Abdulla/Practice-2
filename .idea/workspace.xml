@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c51653b-8c0e-448f-be82-57fed6d8683b" name="Changes" comment="feat: added main file">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="9c51653b-8c0e-448f-be82-57fed6d8683b" name="Changes" comment="test: fixed tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_1.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_1.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_2.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_2.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +25,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="stage-1" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -61,7 +63,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "stage-2",
     "last_opened_file_path": "C:/Users/user/PycharmProjects/PythonProject1",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   }
@@ -108,7 +110,23 @@
       <option name="project" value="LOCAL" />
       <updated>1793638430751</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat: added main file">
+      <option name="closed" value="true" />
+      <created>1793638624331</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1793638624331</updated>
+    </task>
+    <task id="LOCAL-00005" summary="test: fixed tests">
+      <option name="closed" value="true" />
+      <created>1793638916779</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1793638916779</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,6 +159,7 @@
     </ignored-roots>
     <MESSAGE value="feat: added arguments support" />
     <MESSAGE value="feat: added main file" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added main file" />
+    <MESSAGE value="test: fixed tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="test: fixed tests" />
   </component>
 </project>
