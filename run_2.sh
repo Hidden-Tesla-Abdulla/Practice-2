@@ -1,1 +1,1 @@
-python src/main.py curl https://dl-cdn.alpinelinux.org/alpine/v3.18/main/x86_64 8.12.1-r0 false true
+python src/main.py A test_repo1.txt last true

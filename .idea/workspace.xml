@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c51653b-8c0e-448f-be82-57fed6d8683b" name="Changes" comment="test: fixed tests">
+    <list default="true" id="9c51653b-8c0e-448f-be82-57fed6d8683b" name="Changes" comment="docs: changed README.md">
+      <change afterPath="$PROJECT_DIR$/test_repo.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_repo1.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_1.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_1.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_2.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_2.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
@@ -68,6 +71,12 @@
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\user\PycharmProjects\PythonProject1" />
+      <recent name="C:\Users\user\PycharmProjects\PythonProject1\.venv" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -126,7 +135,23 @@
       <option name="project" value="LOCAL" />
       <updated>1793638916779</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="feat: added opportunity to get dependencies">
+      <option name="closed" value="true" />
+      <created>1793640626576</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1793640626576</updated>
+    </task>
+    <task id="LOCAL-00007" summary="docs: changed README.md">
+      <option name="closed" value="true" />
+      <created>1793640847679</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1793640847679</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -140,7 +165,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="stage-2" />
                       </list>
                     </value>
                   </entry>
@@ -160,6 +185,8 @@
     <MESSAGE value="feat: added arguments support" />
     <MESSAGE value="feat: added main file" />
     <MESSAGE value="test: fixed tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="test: fixed tests" />
+    <MESSAGE value="feat: added opportunity to get dependencies" />
+    <MESSAGE value="docs: changed README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="docs: changed README.md" />
   </component>
 </project>

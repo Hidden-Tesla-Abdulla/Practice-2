@@ -1,1 +1,1 @@
-python src/main.py python3 https://dl-cdn.alpinelinux.org/alpine/v3.18/main/x86_64/APKINDEX.tar.gz last
+python src/main.py A test_repo.txt last true
