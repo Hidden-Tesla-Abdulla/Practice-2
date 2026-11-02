@@ -1,1 +1,1 @@
-python .venv/src/main.py B test_repo1.txt last w 212 test_graph
+python src/main.py B test_repo1.txt last w 212 test_graph
