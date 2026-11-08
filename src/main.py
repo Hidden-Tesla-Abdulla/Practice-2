@@ -6,18 +6,20 @@ from typing import Optional, Dict, List, Set
 from collections import deque
 
 
-def get_args():  # Проверка корректности аргументов
-    if len(sys.argv) > 4:
+def get_args():
+    """Проверка корректности аргументов"""
+    argv = sys.argv
+    if len(argv) > 4:
         try:
-            if sys.argv[4].lower() not in ["true", "false"]:
+            if argv[4].lower() not in ["true", "false"]:
                 raise ValueError
         except ValueError:
             print("[ERROR] Неправильный параметр режима работы с репозиторием")
             return False
 
-    if len(sys.argv) > 6:
+    if len(argv) > 6:
         try:
-            if sys.argv[6].lower() not in ["true", "false"]:
+            if argv[6].lower() not in ["true", "false"]:
                 raise ValueError
         except ValueError:
             print("[ERROR] Неправильный параметр режима вывода зависимостей")
@@ -26,7 +28,8 @@ def get_args():  # Проверка корректности аргументо�
     return True
 
 
-def download_apkindex(repo_url: str):  # Скачивает APK файл
+def download_apkindex(repo_url: str):
+    """Скачивает APK файл"""
     if not repo_url.endswith("APKINDEX.tar.gz"):
         if not repo_url.endswith("/"):
             repo_url += "/"
@@ -41,7 +44,8 @@ def download_apkindex(repo_url: str):  # Скачивает APK файл
         return response.read()
 
 
-def extract_apkindex(archive_bytes: bytes):  # Распаковывает APK файл и возвращает его содержимое
+def extract_apkindex(archive_bytes: bytes):
+    """Распаковывает APK файл и возвращает его содержимое"""
     with tarfile.open(fileobj=io.BytesIO(archive_bytes), mode="r:gz") as tar:
         for member in tar.getmembers():
             if member.name in ("APKINDEX", "APKINDEX.tar.gz/APKINDEX"):
@@ -51,7 +55,8 @@ def extract_apkindex(archive_bytes: bytes):  # Распаковывает APK ф
         raise RuntimeError("Файл APKINDEX не найден в архиве")
 
 
-def parse_apkindex(content: str):  # Парсит содержимое APK файла в список словарей
+def parse_apkindex(content: str):
+    """Парсит содержимое APK файла в список словарей"""
     packages: List[Dict[str, str]] = []
     current: Dict[str, str] = {}
 
@@ -78,7 +83,8 @@ def parse_apkindex(content: str):  # Парсит содержимое APK фа�
 
 def find_package(packages: List[Dict[str, str]],
                  name: str,
-                 version: Optional[str] = None):  # Находит пакет по его имени и опционально по версии
+                 version: Optional[str] = None):
+    """Находит пакет по его имени и опционально по версии"""
     candidates = [p for p in packages if p.get("P") == name]
     if not candidates:
         return None
@@ -90,14 +96,16 @@ def find_package(packages: List[Dict[str, str]],
     return None
 
 
-def extract_dependencies(pkg: Dict[str, str]):  # Извлекает прямые зависимости
+def extract_dependencies(pkg: Dict[str, str]):
+    """Извлекает прямые зависимости"""
     deps_raw = pkg.get("D", "")
     if not deps_raw:
         return []
     return [d for d in deps_raw.split() if d]
 
 
-def load_test_repository(file_path: str):  # Загрузка тестового репозитория из файла
+def load_test_repository(file_path: str):
+    """Загрузка тестового репозитория из файла"""
     packages = []
     current = {}
 
@@ -134,7 +142,8 @@ def load_test_repository(file_path: str):  # Загрузка тестового
         sys.exit(1)
 
 
-def build_dependency_graph(packages: List[Dict[str, str]]):  # Построение графа зависимостей
+def build_dependency_graph(packages: List[Dict[str, str]]):
+    """Построение графа зависимостей"""
     graph = {}
 
     for pkg in packages:
@@ -149,7 +158,8 @@ def bfs_with_recursion(graph: Dict[str, List[str]],
                        start: str,
                        visited: Optional[Set[str]] = None,
                        depth: int = 0,
-                       max_depth: int = 100):  # BFS с рекурией для построения дерева зависимостей
+                       max_depth: int = 100):
+    """BFS с рекурией для построения дерева зависимостей"""
     if visited is None:
         visited = set()
 
@@ -175,7 +185,8 @@ def bfs_with_recursion(graph: Dict[str, List[str]],
 
 
 def get_all_transitive_deps(graph: Dict[str, List[str]],
-                            start: str):  # Возвращает все транзитивные зависимости используя BFS
+                            start: str):
+    """Возвращает все транзитивные зависимости используя BFS"""
     all_deps = set()
     queue = deque([start])
     visited = {start}
@@ -190,7 +201,7 @@ def get_all_transitive_deps(graph: Dict[str, List[str]],
                 all_deps.add(dep)
                 queue.append(dep)
             elif dep in all_deps:
-                # Циклическая зависимость
+                """Циклическая зависимость"""
                 pass
 
     return all_deps
@@ -202,11 +213,12 @@ def print_ascii_tree(graph: Dict[str, List[str]],
                      is_last: bool = True,
                      visited: Optional[Set[str]] = None,
                      depth: int = 0,
-                     max_depth: int = 50):  # Выводит дерево зависимостей
+                     max_depth: int = 50):
+    """Выводит дерево зависимостей"""
     if visited is None:
         visited = set()
 
-    # Проверяем на циклическую зависимость
+    """Проверяем на циклическую зависимость"""
     if start in visited:
         connector = "└── " if is_last else "├── "
         print(f"{prefix}{connector}{start} (циклическая зависимость)")
@@ -236,7 +248,8 @@ def print_ascii_tree(graph: Dict[str, List[str]],
         print_ascii_tree(graph, dep, new_prefix, is_last_dep, visited.copy(), depth + 1, max_depth)
 
 
-def print_dependency_summary(graph: Dict[str, List[str]], start: str):  # Выводит сводку о зависимостях пакета
+def print_dependency_summary(graph: Dict[str, List[str]], start: str):
+    """Выводит сводку о зависимостях пакета"""
     print(f"\n{'=' * 60}")
     print(f"Граф зависимостей для пакета: {start}")
     print(f"{'=' * 60}\n")
@@ -260,7 +273,8 @@ def print_dependency_summary(graph: Dict[str, List[str]], start: str):  # Выв
     print("-" * 60)
 
 
-def create_test_repository_file(file_path: str):  # Создает пример тестового файла репозитория
+def create_test_repository_file(file_path: str):
+    """Создает пример тестового файла репозитория"""
     test_content = """
 P:A
 V:1.0
@@ -302,13 +316,15 @@ D:G
 def main():
     print("=== Получение зависимостей пакета Alpine Linux (APK) ===\n")
 
+    argv = sys.argv
+
     test_mode = False
     test_file = None
 
-    if len(sys.argv) > 4 and sys.argv[4].lower() == "true":
+    if len(argv) > 4 and argv[4].lower() == "true":
         test_mode = True
-        if len(sys.argv) > 2:
-            test_file = sys.argv[2].strip()
+        if len(argv) > 2:
+            test_file = argv[2].strip()
         else:
             sys.exit(1)
 
@@ -317,14 +333,14 @@ def main():
         print("[ERROR] Имя пакета не указано")
         sys.exit(1)
 
-    pkg_version = None if len(sys.argv) <= 3 or sys.argv[3].lower() in ["last", "l", "-"] else sys.argv[3]
+    pkg_version = None if len(argv) <= 3 or argv[3].lower() in ["last", "l", "-"] else argv[3]
 
     try:
         if test_mode:
             print(f"[INFO] Режим тестирования: загрузка из файла {test_file}")
             packages = load_test_repository(test_file)
         else:
-            repo_url = sys.argv[2].strip()
+            repo_url = argv[2].strip()
             if not repo_url:
                 print("[ERROR] URL не указан")
                 sys.exit(1)
@@ -372,8 +388,10 @@ def main():
         sys.exit(4)
 
 
-if __name__ == "__main__":  # Для демонстрации: создаем тестовый файл если он не существует
-    if len(sys.argv) > 4 and sys.argv[4].lower() == "true":
+if __name__ == "__main__":
+    """Для демонстрации: создаем тестовый файл если он не существует"""
+    argv = sys.argv
+    if len(argv) > 4 and argv[4].lower() == "true":
         if len(sys.argv) > 2:
             test_file = sys.argv[2]
             import os
