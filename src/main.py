@@ -6,23 +6,26 @@ from typing import Optional, Dict, List
 import sys
 
 
-def get_args(): # Проверка корректности аргументов
-    if len(sys.argv) > 4:
+def get_args():
+    """Проверка корректности аргументов"""
+    argv = sys.argv
+    if len(argv) > 4:
         try:
-            if sys.argv[4].lower() not in ["true", "false"]:
+            if argv[4].lower() not in ["true", "false"]:
                 raise ValueError
         except ValueError:
             print("[ERROR] Неправильный параметр режима работы с репозиторием")
-    if len(sys.argv) > 6:
+    if len(argv) > 6:
         try:
-            if sys.argv[6].lower() not in ["true", "false"]:
+            if argv[6].lower() not in ["true", "false"]:
                 raise ValueError
         except ValueError:
             print("[ERROR] Неправильный параметр режима вывод зависимостей")
             return False
     return True
 
-def download_apkindex(repo_url: str): # Скачивает APK файл
+def download_apkindex(repo_url: str):
+    """Скачивает APK файл"""
     if not repo_url.endswith("APKINDEX.tar.gz"):
         if not repo_url.endswith("/"):
             repo_url += "/"
@@ -37,7 +40,8 @@ def download_apkindex(repo_url: str): # Скачивает APK файл
         return response.read()
 
 
-def extract_apkindex(archive_bytes: bytes): # Распаковывает APK файл и возвращает его содержимое
+def extract_apkindex(archive_bytes: bytes):
+    """Распаковывает APK файл и возвращает его содержимое"""
     with tarfile.open(fileobj=io.BytesIO(archive_bytes), mode="r:gz") as tar:
         for member in tar.getmembers():
             if member.name in ("APKINDEX", "APKINDEX.tar.gz/APKINDEX"):
@@ -47,7 +51,8 @@ def extract_apkindex(archive_bytes: bytes): # Распаковывает APK ф�
     raise RuntimeError("Файл APKINDEX не найден в архиве")
 
 
-def parse_apkindex(content: str): # Парсит содержимое APK файла в список словарей
+def parse_apkindex(content: str):
+    """Парсит содержимое APK файла в список словарей"""
     packages: List[Dict[str, str]] = []
     current: Dict[str, str] = {}
 
@@ -73,7 +78,8 @@ def parse_apkindex(content: str): # Парсит содержимое APK фай
 
 def find_package(packages: List[Dict[str, str]],
                  name: str,
-                 version: Optional[str] = None): # Находит пакет по его имени и опционально по версии
+                 version: Optional[str] = None):
+    """Находит пакет по его имени и опционально по версии"""
     candidates = [p for p in packages if p.get("P") == name]
     if not candidates:
         return None
@@ -85,7 +91,8 @@ def find_package(packages: List[Dict[str, str]],
     return None
 
 
-def extract_dependencies(pkg: Dict[str, str]): # Извлекает прямые зависимости
+def extract_dependencies(pkg: Dict[str, str]):
+    """Извлекает прямые зависимости"""
     deps_raw = pkg.get("D", "")
     if not deps_raw:
         return []
@@ -95,7 +102,8 @@ def extract_dependencies(pkg: Dict[str, str]): # Извлекает прямые
 def main():
     print("=== Получение зависимостей пакета Alpine Linux (APK) ===\n")
 
-    repo_url = sys.argv[2].strip()
+    argv = sys.argv
+    repo_url = argv[2].strip()
     if not repo_url:
         print("[ERROR] URL не указан")
         sys.exit(1)
@@ -105,7 +113,7 @@ def main():
         print("[ERROR] Имя пакета не указано")
         sys.exit(1)
 
-    pkg_version = None if sys.argv[3].lower() in ["last", "l", "-"] else sys.argv[3]
+    pkg_version = None if argv[3].lower() in ["last", "l", "-"] else argv[3]
 
     try:
         archive = download_apkindex(repo_url)
