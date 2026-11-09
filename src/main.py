@@ -2,6 +2,7 @@ import urllib.request
 import tarfile
 import io
 import sys
+import os
 from typing import Optional, Dict, List, Set
 from collections import deque
 
@@ -16,7 +17,6 @@ def get_args():
         except ValueError:
             print("[ERROR] Неправильный параметр режима работы с репозиторием")
             return False
-
     if len(argv) > 6:
         try:
             if argv[6].lower() not in ["true", "false"]:
@@ -24,7 +24,6 @@ def get_args():
         except ValueError:
             print("[ERROR] Неправильный параметр режима вывода зависимостей")
             return False
-
     return True
 
 
@@ -34,7 +33,6 @@ def download_apkindex(repo_url: str):
         if not repo_url.endswith("/"):
             repo_url += "/"
         repo_url += "APKINDEX.tar.gz"
-
     print(f"[INFO] Загрузка индекса: {repo_url}")
     request = urllib.request.Request(
         repo_url,
@@ -52,14 +50,13 @@ def extract_apkindex(archive_bytes: bytes):
                 f = tar.extractfile(member)
                 if f is not None:
                     return f.read().decode("utf-8", errors="replace")
-        raise RuntimeError("Файл APKINDEX не найден в архиве")
+    raise RuntimeError("Файл APKINDEX не найден в архиве")
 
 
 def parse_apkindex(content: str):
     """Парсит содержимое APK файла в список словарей"""
     packages: List[Dict[str, str]] = []
     current: Dict[str, str] = {}
-
     for raw_line in content.splitlines():
         line = raw_line.rstrip("\n")
         if not line:
@@ -74,16 +71,12 @@ def parse_apkindex(content: str):
             current[key] = current[key] + " " + value
         else:
             current[key] = value
-
     if current:
         packages.append(current)
-
     return packages
 
 
-def find_package(packages: List[Dict[str, str]],
-                 name: str,
-                 version: Optional[str] = None):
+def find_package(packages: List[Dict[str, str]], name: str, version: Optional[str] = None):
     """Находит пакет по его имени и опционально по версии"""
     candidates = [p for p in packages if p.get("P") == name]
     if not candidates:
@@ -108,7 +101,6 @@ def load_test_repository(file_path: str):
     """Загрузка тестового репозитория из файла"""
     packages = []
     current = {}
-
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
@@ -118,7 +110,6 @@ def load_test_repository(file_path: str):
                         packages.append(current)
                         current = {}
                     continue
-
                 if ':' in line:
                     key, _, value = line.partition(':')
                     key = key.strip()
@@ -127,13 +118,10 @@ def load_test_repository(file_path: str):
                         current[key] = current[key] + " " + value
                     else:
                         current[key] = value
-
             if current:
                 packages.append(current)
-
         print(f"[INFO] Загружено {len(packages)} пакетов из тестового файла")
         return packages
-
     except FileNotFoundError:
         print(f"[ERROR] Файл '{file_path}' не найден")
         sys.exit(1)
@@ -145,56 +133,56 @@ def load_test_repository(file_path: str):
 def build_dependency_graph(packages: List[Dict[str, str]]):
     """Построение графа зависимостей"""
     graph = {}
-
     for pkg in packages:
         name = pkg.get("P", "")
         deps = extract_dependencies(pkg)
         graph[name] = deps
-
     return graph
 
 
-def bfs_with_recursion(graph: Dict[str, List[str]],
-                       start: str,
-                       visited: Optional[Set[str]] = None,
-                       depth: int = 0,
+def build_reverse_graph(forward_graph: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    """Построение графа обратных зависимостей"""
+    reverse_graph = {}
+    for node in forward_graph:
+        if node not in reverse_graph:
+            reverse_graph[node] = []
+
+    for pkg, deps in forward_graph.items():
+        for dep in deps:
+            if dep not in reverse_graph:
+                reverse_graph[dep] = []
+            reverse_graph[dep].append(pkg)
+    return reverse_graph
+
+
+def bfs_with_recursion(graph: Dict[str, List[str]], start: str, visited: Optional[Set[str]] = None, depth: int = 0,
                        max_depth: int = 100):
-    """BFS с рекурией для построения дерева зависимостей"""
+    """BFS с рекурсией для построения дерева зависимостей"""
     if visited is None:
         visited = set()
-
     result = {}
-
     if depth >= max_depth or start in visited:
         if start in visited:
             print(f"  [WARNING] Обнаружена циклическая зависимость: {start}")
         return result
-
     visited.add(start)
-
     neighbors = graph.get(start, [])
-
     if neighbors:
         result[start] = neighbors
-
         for neighbor in neighbors:
             sub_result = bfs_with_recursion(graph, neighbor, visited.copy(), depth + 1, max_depth)
             result.update(sub_result)
-
     return result
 
 
-def get_all_transitive_deps(graph: Dict[str, List[str]],
-                            start: str):
+def get_all_transitive_deps(graph: Dict[str, List[str]], start: str):
     """Возвращает все транзитивные зависимости используя BFS"""
     all_deps = set()
     queue = deque([start])
     visited = {start}
-
     while queue:
         current = queue.popleft()
         deps = graph.get(current, [])
-
         for dep in deps:
             if dep not in visited:
                 visited.add(dep)
@@ -203,46 +191,32 @@ def get_all_transitive_deps(graph: Dict[str, List[str]],
             elif dep in all_deps:
                 """Циклическая зависимость"""
                 pass
-
     return all_deps
 
 
-def print_ascii_tree(graph: Dict[str, List[str]],
-                     start: str,
-                     prefix: str = "",
-                     is_last: bool = True,
-                     visited: Optional[Set[str]] = None,
-                     depth: int = 0,
-                     max_depth: int = 50):
+def print_ascii_tree(graph: Dict[str, List[str]], start: str, prefix: str = "", is_last: bool = True,
+                     visited: Optional[Set[str]] = None, depth: int = 0, max_depth: int = 50):
     """Выводит дерево зависимостей"""
     if visited is None:
         visited = set()
-
     """Проверяем на циклическую зависимость"""
     if start in visited:
         connector = "└── " if is_last else "├── "
         print(f"{prefix}{connector}{start} (циклическая зависимость)")
         return
-
     visited.add(start)
-
     if depth == 0:
         connector = ""
     else:
         connector = "└── " if is_last else "├── "
-
     print(f"{prefix}{connector}{start}")
-
     deps = graph.get(start, [])
-
     if not deps:
         return
-
     if depth > 0:
         new_prefix = prefix + ("    " if is_last else "│   ")
     else:
         new_prefix = prefix
-
     for i, dep in enumerate(deps):
         is_last_dep = (i == len(deps) - 1)
         print_ascii_tree(graph, dep, new_prefix, is_last_dep, visited.copy(), depth + 1, max_depth)
@@ -253,12 +227,10 @@ def print_dependency_summary(graph: Dict[str, List[str]], start: str):
     print(f"\n{'=' * 60}")
     print(f"Граф зависимостей для пакета: {start}")
     print(f"{'=' * 60}\n")
-
     direct_deps = graph.get(start, [])
     print(f"Прямые зависимости ({len(direct_deps)}):")
     for dep in direct_deps:
         print(f"  - {dep}")
-
     all_deps = get_all_transitive_deps(graph, start)
     print(f"\nВсе транзитивные зависимости ({len(all_deps)}):")
     if all_deps:
@@ -266,17 +238,37 @@ def print_dependency_summary(graph: Dict[str, List[str]], start: str):
             print(f"  - {dep}")
     else:
         print("  (нет дополнительных зависимостей)")
-
     print(f"\nДерево зависимостей:")
     print("-" * 60)
     print_ascii_tree(graph, start)
     print("-" * 60)
 
 
+def print_reverse_dependency_summary(reverse_graph: Dict[str, List[str]], start: str):
+    """Выводит сводку об обратных зависимостях пакета"""
+    print(f"\n{'=' * 60}")
+    print(f"ОБРАТНЫЕ зависимости для пакета: {start}")
+    print(f"{'=' * 60}\n")
+
+    direct_rev_deps = reverse_graph.get(start, [])
+    print(f"Прямые обратные зависимости ({len(direct_rev_deps)}):")
+    if direct_rev_deps:
+        for dep in direct_rev_deps:
+            print(f"  - {dep}")
+    else:
+        print("  (пакет не используется другими пакетами)")
+
+    traversed_subgraph = bfs_with_recursion(reverse_graph, start)
+
+    print(f"\nДерево обратных зависимостей:")
+    print("-" * 60)
+    print_ascii_tree(reverse_graph, start)
+    print("-" * 60)
+
+
 def create_test_repository_file(file_path: str):
     """Создает пример тестового файла репозитория"""
-    test_content = """
-P:A
+    test_content = """P:A
 V:1.0
 D:B C
 
@@ -304,23 +296,18 @@ D:H
 
 P:H
 V:1.0
-D:G
+D:G A
 """
-
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(test_content)
-
     print(f"[INFO] Создан тестовый файл: {file_path}")
-
 
 def main():
     print("=== Получение зависимостей пакета Alpine Linux (APK) ===\n")
-
     argv = sys.argv
 
     test_mode = False
     test_file = None
-
     if len(argv) > 4 and argv[4].lower() == "true":
         test_mode = True
         if len(argv) > 2:
@@ -344,7 +331,6 @@ def main():
             if not repo_url:
                 print("[ERROR] URL не указан")
                 sys.exit(1)
-
             archive = download_apkindex(repo_url)
             content = extract_apkindex(archive)
             packages = parse_apkindex(content)
@@ -362,19 +348,19 @@ def main():
         print(f"  Версия: {pkg.get('V')}")
 
         graph = build_dependency_graph(packages)
-
         print_dependency_summary(graph, pkg_name)
+
+        reverse_graph = build_reverse_graph(graph)
+        print_reverse_dependency_summary(reverse_graph, pkg_name)
 
         print(f"\nПроверка на циклические зависимости:")
         all_deps = get_all_transitive_deps(graph, pkg_name)
         cycles_found = False
-
         for dep in all_deps:
             dep_deps = graph.get(dep, [])
             if pkg_name in dep_deps:
                 print(f"  [CYCLE] {pkg_name} -> ... -> {dep} -> {pkg_name}")
                 cycles_found = True
-
         if not cycles_found:
             print("  Циклические зависимости не обнаружены")
 
@@ -389,13 +375,10 @@ def main():
 
 
 if __name__ == "__main__":
-    """Для демонстрации: создаем тестовый файл если он не существует"""
     argv = sys.argv
     if len(argv) > 4 and argv[4].lower() == "true":
         if len(sys.argv) > 2:
             test_file = sys.argv[2]
-            import os
-
             if not os.path.exists(test_file):
                 create_test_repository_file(test_file)
 

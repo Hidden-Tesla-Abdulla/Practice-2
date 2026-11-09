@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c51653b-8c0e-448f-be82-57fed6d8683b" name="Changes" comment="docs: changed README.md">
-      <change afterPath="$PROJECT_DIR$/test_repo.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_repo1.txt" afterDir="false" />
+    <list default="true" id="9c51653b-8c0e-448f-be82-57fed6d8683b" name="Changes" comment="fix: deleted magic">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_1.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_1.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_2.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_2.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,17 +58,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "stage-2",
-    "last_opened_file_path": "C:/Users/user/PycharmProjects/PythonProject1",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;stage-3&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/PycharmProjects/PythonProject1&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\user\PycharmProjects\PythonProject1" />
@@ -151,7 +149,15 @@
       <option name="project" value="LOCAL" />
       <updated>1793640847679</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="fix: deleted magic">
+      <option name="closed" value="true" />
+      <created>1794147464545</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1794147464545</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -165,7 +171,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="stage-2" />
+                        <option value="stage-4" />
                       </list>
                     </value>
                   </entry>
@@ -187,6 +193,7 @@
     <MESSAGE value="test: fixed tests" />
     <MESSAGE value="feat: added opportunity to get dependencies" />
     <MESSAGE value="docs: changed README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="docs: changed README.md" />
+    <MESSAGE value="fix: deleted magic" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: deleted magic" />
   </component>
 </project>
